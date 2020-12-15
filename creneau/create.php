@@ -37,19 +37,57 @@ $stmt->bindParam(":end", $end);
 $stmt->bindParam(":nb", $nb);
 $stmt->bindParam(":salle_id", $salle['id']);
 
-$matieres = $data->matieres;
+$cID = null;
 
 if($stmt->execute()){
-    echo 'ok';
-} else {
-    var_dump($stmt->errorInfo());
+    $cID = $conn->lastInsertId();
 }
 
-foreach ($matieres as $m) {
-    // 1/ Vérifier que la matière existe dans la base si elle n'est pas dispo alors la créer
-    // 2/ création du matiere_has_creneau avec les données creneau_id, lvl, matiere_id
+$matieres = $data->matieres;
 
-    var_dump($m->matiere);
-    var_dump($m->lvl);
+foreach ($matieres as $matiere) {
+    $mID = null;
+
+    $query = "SELECT id FROM matiere WHERE `name` = '" . $matiere->matiere ."'";
+
+    $result = $conn->query($query);
+    $m = $result->fetch();
+
+    if ($m != false) {
+        $mID = $m['id'];
+    } else {
+        $query = "INSERT INTO
+                matiere
+            SET
+				name=:name";
+
+        $stmt = $conn->prepare($query);
+        $name = $matiere->matiere;
+        $stmt->bindParam(":name", $name);
+        if ($stmt->execute()) {
+
+        } else {
+            var_dump($stmt->errorInfo());
+            die();
+        }
+
+        $mID = $conn->lastInsertId();
+    }
+
+    $query = "INSERT INTO
+                matiere_has_creneau
+            SET
+				creneau_id=:creneau_id,
+				lvl=:lvl,
+				matiere_id=:matiere_id
+    ";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(":creneau_id", $cID);
+    $lvl = $matiere->lvl;
+    $stmt->bindParam(":lvl", $lvl);
+    $stmt->bindParam(":matiere_id", $mID);
+    $stmt->execute();
 }
-die();
+
+echo 'OK';
