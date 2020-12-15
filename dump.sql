@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Dec 15, 2020 at 10:27 AM
+-- Generation Time: Dec 15, 2020 at 10:52 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.4.2
 
@@ -35,7 +35,9 @@ CREATE TABLE `creneau` (
 INSERT INTO `creneau` (`id`, `begin`, `end`, `salle_id`, `nb`) VALUES
 (1, '2020-11-20 15:30:00', '2020-11-20 16:30:00', 1, 4),
 (2, '2020-11-20 15:30:00', '2020-11-20 16:30:00', 1, 4),
-(3, '2020-11-20 15:30:00', '2020-11-20 16:30:00', 1, 4);
+(3, '2020-11-20 15:30:00', '2020-11-20 16:30:00', 1, 4),
+(4, '2020-11-20 15:30:00', '2020-11-20 16:30:00', 1, 4),
+(5, '2020-11-20 15:30:00', '2020-11-20 16:30:00', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -70,6 +72,16 @@ CREATE TABLE `matiere` (
   `name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `matiere`
+--
+
+INSERT INTO `matiere` (`id`, `name`) VALUES
+(1, 'Espagnol'),
+(2, 'Histoire'),
+(3, 'maths'),
+(4, 'anglais');
+
 -- --------------------------------------------------------
 
 --
@@ -81,6 +93,16 @@ CREATE TABLE `matiere_has_creneau` (
   `creneau_id` int(11) NOT NULL,
   `lvl` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `matiere_has_creneau`
+--
+
+INSERT INTO `matiere_has_creneau` (`matiere_id`, `creneau_id`, `lvl`) VALUES
+(1, 4, NULL),
+(2, 4, NULL),
+(3, 5, 5),
+(4, 5, 9);
 
 -- --------------------------------------------------------
 
@@ -173,9 +195,8 @@ ALTER TABLE `matiere`
 -- Indexes for table `matiere_has_creneau`
 --
 ALTER TABLE `matiere_has_creneau`
-  ADD PRIMARY KEY (`matiere_id`,`creneau_id`),
-  ADD KEY `fk_matiere_has_Creneau_Creneau1_idx` (`creneau_id`),
-  ADD KEY `fk_matiere_has_Creneau_matiere1_idx` (`matiere_id`);
+  ADD KEY `fk_matiere_has_Creneau_Creneau1` (`creneau_id`),
+  ADD KEY `fk_matiere_has_Creneau_matiere1` (`matiere_id`);
 
 --
 -- Indexes for table `parent`
@@ -205,13 +226,19 @@ ALTER TABLE `salle`
 -- AUTO_INCREMENT for table `creneau`
 --
 ALTER TABLE `creneau`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `enfant`
 --
 ALTER TABLE `enfant`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `matiere`
+--
+ALTER TABLE `matiere`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `parent`
